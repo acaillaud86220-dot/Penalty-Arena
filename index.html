@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a291d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Penalty Arena : défis de tirs au but, club, étoiles et tournois.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<title>Penalty Arena — Défi football</title>
+<style>
+:root{--pitch:#146b3b;--pitch2:#0f5a31;--lime:#d9ff4f;--dark:#091d16;--ink:#17251e;--muted:#66776d;--line:#dce7df;--paper:#f4f7f3;--blue:#235be7}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.top{background:var(--dark);color:white;border-bottom:4px solid var(--lime)}.topinner{max-width:1120px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:.04em}.crest{width:39px;height:44px;background:var(--lime);color:var(--dark);clip-path:polygon(0 0,100% 0,90% 75%,50% 100%,10% 75%);display:grid;place-items:center;font-size:20px}.brand small{display:block;font-size:10px;color:#a8c5b2;letter-spacing:.18em}.topstats{display:flex;gap:16px;font-size:12px;color:#d5e3d9}.topstats b{color:var(--lime);font-size:15px}
+.hero{background:radial-gradient(ellipse at 80% 30%,#26754b 0,#0e4328 42%,#09271a 75%);color:white;padding:28px 18px 48px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:300px;height:300px;border:1px solid #ffffff20;border-radius:50%;right:-80px;top:-90px;box-shadow:0 0 0 35px #ffffff08,0 0 0 75px #ffffff06}.hero-inner{max-width:1120px;margin:auto;position:relative;z-index:1}.kicker{color:var(--lime);font-size:11px;letter-spacing:.2em;font-weight:900}.hero h1{font-size:clamp(35px,7vw,64px);line-height:.95;letter-spacing:-.045em;margin:12px 0;max-width:680px}.hero p{color:#d0e4d6;max-width:600px;line-height:1.55;margin:0}.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.hero-badges span{font-size:11px;font-weight:800;border:1px solid #ffffff30;border-radius:5px;padding:7px 9px;background:#ffffff0d}
+main{max-width:1120px;margin:-23px auto 0;padding:0 14px 35px;position:relative;z-index:2}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:14px}.tab{white-space:nowrap;border:0;border-radius:8px;padding:12px 15px;background:#e2e9e3;color:#34473a;font-weight:900;cursor:pointer}.tab.active{background:var(--lime);color:#17271a;box-shadow:0 4px 0 #9ab51f}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:14px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:14px;box-shadow:0 5px 20px #173a2308}.panelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.panel h2{font-size:17px;margin:0;letter-spacing:-.02em}.eyetag{font-size:10px;letter-spacing:.1em;font-weight:950;color:var(--pitch);background:#e5f5e8;padding:6px 8px;border-radius:4px}
+.pitch{position:relative;background:repeating-linear-gradient(0deg,var(--pitch) 0,var(--pitch) 42px,var(--pitch2) 42px,var(--pitch2) 84px);border-radius:10px;padding:14px 12px 13px;color:white;overflow:hidden;perspective:900px;isolation:isolate}.pitch:before{content:"";position:absolute;inset:8px;border:1px solid #ffffff70;border-radius:3px;pointer-events:none}.pitchtop{display:flex;justify-content:space-between;position:relative;font-size:10px;letter-spacing:.12em;font-weight:900;color:#d3f0d8}.goal{height:132px;width:min(78%,370px);margin:12px auto 0;border:5px solid #fff;border-bottom:0;position:relative;background:repeating-linear-gradient(90deg,#ffffff15 0,#ffffff15 2px,transparent 2px,transparent 24px),repeating-linear-gradient(0deg,#ffffff15 0,#ffffff15 2px,transparent 2px,transparent 23px);box-shadow:0 0 0 1px #123d26;transition:height .2s;transform:rotateX(-4deg);transform-style:preserve-3d}.keeper{position:absolute;left:50%;top:17px;transform:translateX(-50%);font-size:45px;z-index:2;transition:left .2s,transform .2s;transform-style:preserve-3d;filter:drop-shadow(0 5px 2px #001b0e66);white-space:nowrap}.target{position:absolute;width:24px;height:24px;border-radius:50%;border:2px dashed var(--lime);background:#d9ff4f30;z-index:1;opacity:0;transition:all .15s}.target.show{opacity:1}.ballarea{height:100px;display:flex;justify-content:center;align-items:flex-end;padding-bottom:5px;position:relative;transform-style:preserve-3d}.ball{font-size:42px;position:relative;z-index:4;transform:translate3d(0,0,0);filter:drop-shadow(0 5px 2px #001b0e66);transform-style:preserve-3d}.shooter{position:absolute;bottom:7px;left:calc(50% - 52px);font-size:42px;z-index:3;transform-origin:65% 80%;filter:drop-shadow(0 5px 2px #001b0e66)}.pitch.is-shooting .shooter{animation:playerKick .58s cubic-bezier(.2,.8,.25,1)}.pitch.is-shooting .ball{animation:ballFlight .72s cubic-bezier(.18,.75,.25,1) forwards}.pitch.is-shooting.shot-chip .ball{animation:ballChip .78s cubic-bezier(.2,.7,.2,1) forwards}.pitch.is-shooting.shot-curve .ball{animation:ballCurve .76s cubic-bezier(.18,.75,.25,1) forwards}.pitch.is-shooting.shot-power .ball{animation:ballPower .52s cubic-bezier(.12,.8,.18,1) forwards}.pitch.is-shooting .keeper.keeper-left{animation:keeperLeft .55s ease-out forwards}.pitch.is-shooting .keeper.keeper-center{animation:keeperJump .55s ease-out forwards}.pitch.is-shooting .keeper.keeper-right{animation:keeperRight .55s ease-out forwards}.shot-flash{position:absolute;inset:0;pointer-events:none;z-index:5;opacity:0;background:radial-gradient(circle at 50% 72%,#fff8 0,transparent 38%)}.pitch.is-shooting .shot-flash{animation:shotFlash .45s ease-out}@keyframes playerKick{0%{transform:rotateY(0) rotateZ(0) translateZ(0)}35%{transform:rotateY(-16deg) rotateZ(-22deg) translate3d(4px,-3px,20px)}100%{transform:rotateY(5deg) rotateZ(8deg) translate3d(0,0,0)}}@keyframes ballFlight{0%{transform:translate3d(0,0,0) scale(1) rotate(0)}25%{transform:translate3d(calc(var(--dx)*.35),-55px,35px) scale(.8) rotate(220deg)}100%{transform:translate3d(var(--dx),-150px,125px) scale(.34) rotate(900deg)}}@keyframes ballChip{0%{transform:translate3d(0,0,0) scale(1)}45%{transform:translate3d(calc(var(--dx)*.45),-105px,50px) scale(.7) rotate(300deg)}100%{transform:translate3d(var(--dx),-145px,120px) scale(.32) rotate(720deg)}}@keyframes ballCurve{0%{transform:translate3d(0,0,0) scale(1)}35%{transform:translate3d(calc(var(--dx)*.2),-70px,30px) scale(.75) rotate(280deg)}70%{transform:translate3d(calc(var(--dx)*.8),-115px,85px) scale(.5) rotate(600deg)}100%{transform:translate3d(var(--dx),-150px,120px) scale(.34) rotate(920deg)}}@keyframes ballPower{0%{transform:translate3d(0,0,0) scale(1)}20%{transform:translate3d(0,8px,-5px) scale(1.12)}100%{transform:translate3d(var(--dx),-150px,130px) scale(.3) rotate(1080deg)}}@keyframes keeperLeft{to{left:23%;transform:translateX(-50%) rotate(-65deg) translate3d(-16px,-8px,30px)}}@keyframes keeperRight{to{left:77%;transform:translateX(-50%) rotate(65deg) translate3d(16px,-8px,30px)}}@keyframes keeperJump{to{transform:translateX(-50%) translateY(-30px) scale(1.08)}}@keyframes shotFlash{0%{opacity:.85}100%{opacity:0}}.pitchline{height:1px;background:#ffffff55;position:relative;margin:0 12%;}.pitchline:after{content:"";position:absolute;width:9px;height:9px;border:1px solid #ffffff70;border-radius:50%;left:calc(50% - 5px);top:-5px}.pitchfooter{font-size:11px;text-align:center;color:#e0f1e4;position:relative}
+.shootgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.shootbtn{border:1px solid #d8e3d9;background:#f7faf6;color:#1d3526;padding:12px 5px;border-radius:8px;font-weight:900;cursor:pointer;transition:transform .1s,background .1s}.shootbtn:active{transform:scale(.97)}.shootbtn span{display:block;font-size:19px;margin-bottom:3px}.shootbtn small{font-size:10px;color:#718074}.shootbtn:disabled{opacity:.4;cursor:not-allowed}
+.btn{border:0;border-radius:8px;padding:12px 14px;font-weight:900;cursor:pointer}.btn-lime{background:var(--lime);color:#14251a}.btn-dark{background:var(--dark);color:white}.btn-light{background:#e8eee9;color:#20382a}.btn:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;gap:8px;margin-top:10px}.actions>*{flex:1}.scoregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.metric{background:#f2f6f1;border-radius:8px;padding:10px}.metric strong{font-size:22px;display:block;letter-spacing:-.04em}.metric span{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.feedback{font-weight:950;text-align:center;min-height:26px;margin-top:10px}.feedback.good{color:#148553}.feedback.bad{color:#bd4a31}.progress{height:7px;background:#e7eee7;border-radius:20px;overflow:hidden;margin:9px 0}.progress div{height:100%;background:var(--pitch);width:0;transition:width .2s}.levelrow{display:flex;align-items:center;justify-content:space-between;gap:8px}.levelname{font-weight:950;font-size:20px}.levelchip{background:var(--lime);padding:6px 9px;border-radius:5px;font-size:11px;font-weight:950}
+.modegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.modecard{border:1px solid var(--line);border-radius:8px;padding:11px;text-align:left;background:#fff;cursor:pointer}.modecard.active{border:2px solid var(--pitch);background:#f1f9f2;padding:10px}.modecard b{display:block;font-size:12px}.modecard span{font-size:10px;color:var(--muted);display:block;margin-top:4px}
+label{font-size:11px;font-weight:900;display:block;margin:10px 0 5px;text-transform:uppercase;letter-spacing:.06em}input,select{width:100%;padding:11px;border:1px solid #d6e0d7;border-radius:8px;background:white;color:var(--ink);font:inherit}.muted{font-size:12px;color:var(--muted);line-height:1.5}.ranktabs{display:flex;gap:6px;margin-bottom:10px}.ranktabs button{flex:1;border:0;border-radius:6px;padding:9px 4px;font-size:11px;font-weight:950;background:#e7eee7;color:#3c5041;cursor:pointer}.ranktabs button.active{background:var(--dark);color:white}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:10px 4px;border-bottom:1px solid #e7eee7;text-align:left}th{font-size:9px;letter-spacing:.08em;color:var(--muted)}.ranknum{font-weight:950;color:#778579}.yourow{background:#f0f8e7;font-weight:900}.notice{background:#fff5dc;border:1px solid #f0dfa8;color:#5b4b1d;border-radius:8px;padding:11px;font-size:11px;line-height:1.5}.hidden{display:none!important}.duelbox{background:#f1f5f1;border-radius:9px;padding:12px}.duelscore{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 0}.duelscore strong{font-size:34px}.duelscore span{font-size:11px;font-weight:900;color:var(--muted)}.pill{display:inline-block;background:#e4f6e8;color:#185a34;border-radius:4px;padding:5px 7px;font-size:10px;font-weight:900}.footer{text-align:center;font-size:11px;color:#738176;padding:0 14px 24px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.topstats{gap:8px}.topstats span:nth-child(2){display:none}.hero{padding-bottom:40px}.goal{height:116px}.panel{padding:13px}}
+
+/* Economy, daily challenges and mini-tournaments */
+.economy-panel{border:2px solid #d9ff4f;background:linear-gradient(135deg,#102c20,#174b31);color:#fff}
+.economy-panel h2,.economy-panel h3{color:#fff}
+.energy-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.energy-number{font-weight:950;font-size:1.25rem;color:#d9ff4f}
+.energy-track{height:13px;background:#071b12;border:1px solid #4c765d;border-radius:99px;overflow:hidden;margin:10px 0}
+.energy-fill{height:100%;width:100%;background:linear-gradient(90deg,#a7e83b,#e2ff65);transition:width .2s}
+.econ-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.econ-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px}
+.econ-card p{margin:6px 0;color:#d6e5da;font-size:.88rem}
+.econ-card .btn{margin-top:8px;width:100%}
+.econ-note{font-size:.82rem;color:#c6d8cc;line-height:1.45}
+.shop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.shop-item{background:#fff;color:#17251e;border-radius:12px;padding:12px;text-align:center;border:1px solid #dce7df}
+.shop-item strong{display:block;font-size:1.2rem}
+.shop-item .price{font-size:1.05rem;font-weight:900;color:#146b3b;margin:5px 0}
+.shop-item button{width:100%;font-weight:800;border:0;border-radius:8px;padding:9px;background:#d9ff4f;color:#091d16;cursor:pointer}
+.challenge-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.14);padding:10px 0}
+.challenge-row:last-child{border-bottom:0}
+.challenge-row p{margin:4px 0 0;font-size:.85rem;color:#d6e5da}
+.challenge-row button{border:0;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer;white-space:nowrap}
+.tourney-list{margin:10px 0;padding-left:20px;color:#d6e5da}
+@media(max-width:560px){.econ-grid,.shop-grid{grid-template-columns:1fr}.shop-item{display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left}.shop-item button{width:auto;min-width:110px}}
+
+
+.club-builder{background:linear-gradient(145deg,#0c2a1d,#174d32);color:#fff;border:2px solid #d9ff4f}
+.club-builder h2,.club-builder h3{color:#fff}
+.club-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.club-stat{background:#ffffff12;border:1px solid #ffffff20;border-radius:10px;padding:10px}
+.club-stat small{display:block;color:#c5ddcd;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.club-stat strong{display:block;color:#d9ff4f;font-size:19px;margin-top:4px}
+.club-progress{height:10px;background:#06170f;border-radius:99px;overflow:hidden;margin:8px 0}
+.club-progress div{height:100%;background:#d9ff4f;width:0;transition:width .2s}
+.building-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.building-card{background:#ffffff0d;border:1px solid #ffffff25;border-radius:12px;padding:12px}
+.building-card .building-icon{font-size:28px}
+.building-card h3{font-size:15px;margin:5px 0}
+.building-card p{font-size:12px;line-height:1.45;color:#d0e3d6;margin:6px 0}
+.building-level{font-weight:900;color:#d9ff4f}
+.building-card button,.division-action{border:0;border-radius:8px;padding:10px;background:#d9ff4f;color:#102218;font-weight:900;cursor:pointer;width:100%;margin-top:8px}
+.building-card button:disabled,.division-action:disabled{opacity:.4;cursor:not-allowed}
+.division-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.division-chip{padding:9px 4px;border-radius:7px;text-align:center;background:#ffffff10;border:1px solid #ffffff20;font-size:11px;color:#d7e8dc}
+.division-chip.current{background:#d9ff4f;color:#14251a;border-color:#d9ff4f;font-weight:950}
+.division-chip.done{background:#2d7a49;color:#fff}
+.club-note{font-size:12px;color:#c5ddcd;line-height:1.5}
+.account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.social-login{border:0;border-radius:10px;padding:13px;font-weight:900;cursor:pointer;width:100%}.google-login{background:#fff;color:#222}.facebook-login{background:#1877f2;color:#fff}
+.friend-code{font-size:24px;font-weight:950;letter-spacing:3px;text-align:center;padding:16px;border-radius:10px;background:#ffffff10;border:1px dashed #d9ff4f;margin:12px 0}
+.friend-rewards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.friend-rewards .metric{padding:14px}
+@media(max-width:560px){.account-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.building-grid{grid-template-columns:1fr}.club-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.division-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+
+/* Playable 3D-style penalty scene: CSS perspective, 3D pitch, modeled players and ball */
+.pitch3d{height:410px;padding:14px 12px 12px;background:linear-gradient(180deg,#152c45 0%,#294766 30%,#1c5835 52%,#0d4828 100%);overflow:hidden;border-radius:12px;perspective:1000px;isolation:isolate}
+.pitch3d:before{inset:7px;border:1px solid #ffffff55;border-radius:8px;z-index:8}
+.pitch3d .pitchtop{z-index:10;text-shadow:0 2px 4px #0008;color:#e8fff0}
+.stadium-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 22%,#a4d5ff45,transparent 45%),linear-gradient(180deg,transparent 0 35%,#03190b50 68%,#04160b90 100%);pointer-events:none}
+.crowd{position:absolute;left:-5%;width:110%;height:85px;top:38px;opacity:.8;background:repeating-linear-gradient(90deg,#1a2938 0 7px,#496078 7px 10px,#26384c 10px 17px,#101f30 17px 22px);clip-path:polygon(0 30%,100% 0,100% 75%,0 100%);box-shadow:0 8px 15px #0008}
+.field3d{position:absolute;left:-18%;right:-18%;top:135px;bottom:-115px;transform:rotateX(57deg);transform-origin:50% 0%;background:repeating-linear-gradient(90deg,#177443 0 54px,#12683a 54px 108px);border:3px solid #dfffea88;box-shadow:0 -8px 30px #0005;overflow:visible}
+.field-outline{position:absolute;inset:15px 10%;border:2px solid #eaffefaa}
+.penalty-box{position:absolute;top:0;left:25%;width:50%;height:42%;border:2px solid #eaffefbb;border-top:0}
+.field-stripe{position:absolute;left:0;right:0;height:2px;background:#ffffff25}.stripe-a{top:30%}.stripe-b{top:66%}
+.pitch3d .goal{position:absolute;top:-62px;left:50%;transform:translateX(-50%) rotateX(-5deg);transform-origin:bottom;width:min(70%,350px);height:115px;margin:0;border:5px solid #f4fff9;border-bottom:0;background:repeating-linear-gradient(90deg,#ffffff22 0,#ffffff22 2px,transparent 2px,transparent 18px),repeating-linear-gradient(0deg,#ffffff20 0,#ffffff20 2px,transparent 2px,transparent 17px);box-shadow:0 0 0 2px #142b20,0 8px 18px #00170c80;transform-style:preserve-3d;z-index:3}
+.goal-net{position:absolute;left:5px;right:5px;top:0;height:100%;border-left:2px solid #ffffff55;border-right:2px solid #ffffff55;transform:translateZ(-13px) rotateX(8deg);background:repeating-linear-gradient(90deg,#ffffff22 0 1px,transparent 1px 17px),repeating-linear-gradient(0deg,#ffffff20 0 1px,transparent 1px 15px)}
+.pitch3d .target{width:24px;height:24px;border:2px dashed #e4ff59;background:#d9ff4f44;border-radius:50%;box-shadow:0 0 18px #d9ff4f70;z-index:5}
+.pitch3d .keeper{position:absolute;left:50%;top:22px;width:36px;height:73px;font-size:initial;transform:translateX(-50%);z-index:4;filter:drop-shadow(0 5px 2px #00170c88);white-space:normal;transition:left .18s,transform .18s;transform-style:preserve-3d}
+.keeper-head,.player-head{position:absolute;width:18px;height:18px;left:9px;top:0;border-radius:50%;background:linear-gradient(135deg,#f4c49a,#9d603d);border:2px solid #e9d1b7;box-shadow:inset -3px -2px 0 #7d452b50}
+.keeper-body{position:absolute;left:4px;top:17px;width:28px;height:27px;border-radius:8px 8px 5px 5px;background:linear-gradient(90deg,#f4cf35,#b99a14 65%,#f8df5b);border:2px solid #fff0a0}
+.keeper-arm{position:absolute;top:20px;width:9px;height:30px;border-radius:8px;background:linear-gradient(90deg,#f5cf35,#b99a14);transform-origin:50% 5px}
+.keeper .arm-left{left:0;transform:rotate(35deg)}.keeper .arm-right{right:0;transform:rotate(-35deg)}
+.keeper-leg{position:absolute;top:41px;width:10px;height:28px;border-radius:5px;background:linear-gradient(90deg,#f1f2f4,#9ca8b0)}.keeper .leg-left{left:7px;transform:rotate(8deg)}.keeper .leg-right{right:7px;transform:rotate(-8deg)}
+.keeper-glove{position:absolute;top:42px;width:12px;height:12px;border-radius:50%;background:#e9ff5a;border:2px solid #fff;z-index:2}.keeper .glove-left{left:-6px}.keeper .glove-right{right:-6px}
+.pitch3d .shooter{position:absolute;left:calc(50% - 66px);bottom:50px;width:39px;height:89px;font-size:initial;z-index:4;transform-origin:60% 85%;filter:drop-shadow(0 7px 3px #00170c88)}
+.player-body{position:absolute;left:5px;top:22px;width:28px;height:35px;border-radius:8px 8px 4px 4px;background:linear-gradient(90deg,#f5f8ff,#2456dc 45%,#122d8b);border:2px solid #b8caff}
+.player-arm{position:absolute;top:26px;width:9px;height:29px;border-radius:8px;background:linear-gradient(90deg,#f5f8ff,#2456dc);transform-origin:50% 5px}.shooter .arm-left{left:0;transform:rotate(28deg)}.shooter .arm-right{right:0;transform:rotate(-28deg)}
+.player-leg{position:absolute;top:53px;width:12px;height:31px;border-radius:6px;background:linear-gradient(90deg,#18232e,#050b11)}.shooter .leg-left{left:7px;transform:rotate(8deg)}.shooter .leg-right{right:6px;transform:rotate(-9deg)}
+.pitch3d .ballarea{position:absolute;left:0;right:0;bottom:38px;height:45px;padding:0;display:block;z-index:5;pointer-events:none}
+.pitch3d .ball{position:absolute;left:calc(50% - 12px);bottom:0;width:25px;height:25px;border-radius:50%;font-size:0;background:radial-gradient(circle at 32% 26%,#fff 0 18%,#dce5e9 19% 38%,#242b32 39% 46%,#f8fbff 47% 70%,#a8b6c0 100%);border:1px solid #fff;box-shadow:0 8px 5px #00170c80,inset -3px -3px 4px #51616d;transform:translate3d(0,0,0);transform-style:preserve-3d}
+.pitch3d .ball:before{content:"";position:absolute;inset:6px;border:2px solid #303941;border-radius:50%;transform:rotate(30deg)}
+.pitch3d .pitchfooter{position:absolute;bottom:12px;left:10px;right:10px;z-index:10;text-shadow:0 2px 4px #000;color:#eaffef}
+.pitch3d.is-shooting .shooter{animation:playerKick3d .58s cubic-bezier(.2,.8,.25,1)}
+.pitch3d.is-shooting .ball{animation:ballFlight3d .72s cubic-bezier(.18,.75,.25,1) forwards}
+.pitch3d.is-shooting.shot-chip .ball{animation:ballChip3d .78s cubic-bezier(.2,.7,.2,1) forwards}
+.pitch3d.is-shooting.shot-curve .ball{animation:ballCurve3d .76s cubic-bezier(.18,.75,.25,1) forwards}
+.pitch3d.is-shooting.shot-power .ball{animation:ballPower3d .52s cubic-bezier(.12,.8,.18,1) forwards}
+.pitch3d.is-shooting .keeper.keeper-left{animation:keeperDiveLeft3d .55s ease-out forwards}.pitch3d.is-shooting .keeper.keeper-right{animation:keeperDiveRight3d .55s ease-out forwards}.pitch3d.is-shooting .keeper.keeper-center{animation:keeperJump3d .55s ease-out forwards}
+@keyframes playerKick3d{0%{transform:rotateY(0) rotateZ(0) translateZ(0)}30%{transform:rotateY(-18deg) rotateZ(-28deg) translate3d(5px,-5px,18px)}65%{transform:rotateY(12deg) rotateZ(18deg) translate3d(0,-2px,8px)}100%{transform:rotateY(0) rotateZ(0) translate3d(0,0,0)}}
+@keyframes ballFlight3d{0%{transform:translate3d(0,0,0) scale(1) rotate(0)}25%{transform:translate3d(calc(var(--dx)*.35),-70px,30px) scale(.78) rotate(220deg)}100%{transform:translate3d(var(--dx),-225px,100px) scale(.28) rotate(900deg)}}
+@keyframes ballChip3d{0%{transform:translate3d(0,0,0) scale(1)}45%{transform:translate3d(calc(var(--dx)*.45),-120px,35px) scale(.7) rotate(300deg)}100%{transform:translate3d(var(--dx),-230px,100px) scale(.27) rotate(720deg)}}
+@keyframes ballCurve3d{0%{transform:translate3d(0,0,0) scale(1)}35%{transform:translate3d(calc(var(--dx)*.2),-85px,30px) scale(.75) rotate(280deg)}70%{transform:translate3d(calc(var(--dx)*.8),-155px,70px) scale(.48) rotate(600deg)}100%{transform:translate3d(var(--dx),-225px,100px) scale(.28) rotate(920deg)}}
+@keyframes ballPower3d{0%{transform:translate3d(0,0,0) scale(1)}20%{transform:translate3d(0,7px,0) scale(1.16)}100%{transform:translate3d(var(--dx),-235px,100px) scale(.25) rotate(1080deg)}}
+@keyframes keeperDiveLeft3d{to{left:24%;transform:translateX(-50%) rotate(-72deg) translate3d(-20px,-8px,25px)}}@keyframes keeperDiveRight3d{to{left:76%;transform:translateX(-50%) rotate(72deg) translate3d(20px,-8px,25px)}}@keyframes keeperJump3d{to{transform:translateX(-50%) translateY(-32px) scale(1.12)}}
+.pitch3d .shot-flash{z-index:9}.pitch3d.is-shooting .shot-flash{animation:shotFlash .45s ease-out}
+@media(max-width:480px){.pitch3d{height:390px}.field3d{top:137px}.pitch3d .goal{width:75%;height:105px}.pitch3d .ballarea{bottom:38px}}
+
+</style>
+</head>
+<body>
+<div class="top"><div class="topinner"><div class="brand"><div class="crest">⚽</div><div>PENALTY ARENA<small>FOOTBALL SKILLS CHALLENGE</small></div></div><div class="topstats"><span>TON NIVEAU<br><b id="topLevel">DÉBUTANT</b></span><span>EXPÉRIENCE<br><b id="topXp">0 XP</b></span></div></div></div>
+<header class="hero"><div class="hero-inner"><div class="kicker">01 / LE TERRAIN T'ATTEND</div><h1>UN TIR. UN BUT.<br>TA LÉGENDE.</h1><p>Entraîne-toi aux tirs au but, progresse de niveau, bats tes records et défie un ami sur le même appareil. Le sommet du classement n'attend que toi.</p><div class="hero-badges"><span>⚡ 5 TIRS PAR SÉRIE</span><span>🏆 6 NIVEAUX</span><span>🌍 CLASSEMENTS DÉMO</span></div></div></header>
+<main>
+<div class="tabs"><button class="tab active" data-tab="play">⚽ TERRAIN</button><button class="tab" data-tab="duel">🥊 DUEL LOCAL</button><button class="tab" data-tab="ranked">🌐 DUEL CLASSÉ</button><button class="tab" data-tab="ranking">🏆 CLASSEMENTS</button><button class="tab" data-tab="profile">👤 MON PROFIL</button><button class="tab" data-tab="friends">👥 AMIS & INVITATIONS</button><button class="tab" data-tab="development">🏗️ MON CLUB</button></div>
+<div class="layout">
+<div>
+
+<section id="page-friends" class="page hidden">
+  <div class="panel"><div class="panelhead"><h2>👥 AMIS & INVITATIONS</h2><span class="eyetag">JOUE ENSEMBLE</span></div>
+    <p class="muted">Invite tes amis à découvrir Penalty Arena. Lors de la première création d’invitation sur cet appareil, tu reçois une récompense de bienvenue.</p>
+    <div class="friend-rewards"><div class="metric"><strong>+25 ⚡</strong><span>Énergie offerte</span></div><div class="metric"><strong>+10 ⭐</strong><span>Étoiles pour ton club</span></div></div>
+    <div class="friend-code" id="paInviteCode">PA-XXXXXX</div>
+    <div class="actions"><button class="btn btn-lime" id="paCreateInvite">CRÉER / PARTAGER MON INVITATION</button><button class="btn btn-light" id="paCopyInvite">COPIER LE CODE</button></div>
+    <p id="paInviteStatus" class="muted">Crée ton invitation pour obtenir ton code personnel.</p>
+    <div class="divider" style="height:1px;background:#ffffff25;margin:18px 0"></div>
+    <div class="panelhead"><h2>📨 AJOUTER UN AMI</h2><span class="eyetag">CODE INVITATION</span></div>
+    <label for="paFriendCodeInput">Code de ton ami</label><input id="paFriendCodeInput" maxlength="16" placeholder="Ex. PA-AB12CD">
+    <button class="btn btn-dark" style="width:100%;margin-top:10px" id="paAddFriend">VALIDER LE CODE</button>
+    <div id="paFriendsList" class="muted" style="margin-top:12px">Ta liste d’amis apparaîtra ici.</div>
+    <p class="econ-note" style="margin-top:14px">Version actuelle : les invitations et amis sont enregistrés uniquement dans ce navigateur. Les récompenses ne peuvent pas encore être vérifiées entre deux vrais comptes ; un serveur sera nécessaire pour éviter les abus.</p>
+  </div>
+</section>
+
+<section id="page-development" class="page hidden">
+  <div class="panel club-builder">
+    <div class="panelhead"><h2>🏗️ MON CLUB — DEVIENS UNE LÉGENDE</h2><span class="eyetag">30 DIVISIONS</span></div>
+    <p class="club-note">Construis ton club, améliore chaque infrastructure jusqu’au niveau 30 et gagne des étoiles en remportant tes parties. Pour accéder à la division suivante, toutes les infrastructures doivent atteindre le niveau de cette division.</p>
+    <div class="club-summary">
+      <div class="club-stat"><small>Division</small><strong id="clubDivision">1 / 30</strong></div>
+      <div class="club-stat"><small>Étoiles</small><strong id="clubStars">0 ⭐</strong></div>
+      <div class="club-stat"><small>Victoires</small><strong id="clubWins">0</strong></div>
+    </div>
+    <div class="panelhead"><h2>Progression vers la division suivante</h2><span class="eyetag" id="clubProgressLabel">0 / 1</span></div>
+    <div class="club-progress"><div id="clubProgressFill"></div></div>
+    <p class="club-note" id="clubDivisionHint">Améliore toutes tes infrastructures pour débloquer la prochaine division.</p>
+    <button class="division-action" id="clubPromote">VALIDER LA MONTÉE DE DIVISION</button>
+    <div class="divider" style="height:1px;background:#ffffff25;margin:18px 0"></div>
+    <div class="panelhead"><h2>🧱 TES INFRASTRUCTURES</h2><span class="eyetag">6 BÂTIMENTS · 30 NIVEAUX CHACUN</span></div>
+    <div class="building-grid" id="clubBuildings"></div>
+    <div class="divider" style="height:1px;background:#ffffff25;margin:18px 0"></div>
+    <div class="panelhead"><h2>🏆 LES 30 DIVISIONS</h2><span class="eyetag">OBJECTIF : DIVISION 30</span></div>
+    <div class="division-list" id="clubDivisionList"></div>
+    <p class="club-note" style="margin-top:12px">Coût des améliorations en étoiles : niveau 1 = 5 ⭐, niveau 2 = 15 ⭐, niveau 3 = 30 ⭐, puis le coût augmente progressivement jusqu’au niveau 30. Les étoiles et bâtiments sont sauvegardés sur cet appareil dans cette maquette.</p>
+  </div>
+</section>
+
+<section id="page-play" class="page">
+<div class="panel">
+<div class="panelhead"><h2>SESSION DE TIRS</h2><span class="eyetag" id="sessionTag">SÉRIE 01</span></div>
+<div class="scoregrid"><div class="metric"><strong id="goals">0</strong><span>Buts</span></div><div class="metric"><strong id="attempts">0/5</strong><span>Tirs</span></div><div class="metric"><strong id="record">0</strong><span>Record</span></div></div>
+<div class="pitch pitch3d"><div class="stadium-glow"></div><div class="crowd crowd-top"></div><div class="pitchtop"><span>⚽ PENALTY ARENA · 3D</span><span id="difficultyLabel">GARDIEN : AMATEUR</span></div><div class="field3d"><div class="field-stripe stripe-a"></div><div class="field-stripe stripe-b"></div><div class="field-outline"></div><div class="penalty-box"></div><div class="goal"><div class="goal-net"></div><div class="target" id="target"></div><div class="keeper" id="keeper" aria-label="Gardien"><span class="keeper-head"></span><span class="keeper-body"></span><span class="keeper-arm arm-left"></span><span class="keeper-arm arm-right"></span><span class="keeper-leg leg-left"></span><span class="keeper-leg leg-right"></span><span class="keeper-glove glove-left"></span><span class="keeper-glove glove-right"></span></div></div><div class="shooter" id="shooter" aria-hidden="true"><span class="player-head"></span><span class="player-body"></span><span class="player-arm arm-left"></span><span class="player-arm arm-right"></span><span class="player-leg leg-left"></span><span class="player-leg leg-right"></span></div><div class="ballarea"><div class="ball" id="ball" style="--dx:0px" aria-label="Ballon"></div></div></div><div class="shot-flash"></div><div class="pitchfooter" id="pitchHint">Choisis ton angle. Le gardien est prêt.</div></div>
+<div class="shootgrid"><button class="shootbtn" onclick="shoot('left')"><span>↖</span>PLEIN LUCARNE<small>GAUCHE</small></button><button class="shootbtn" onclick="shoot('center')"><span>↑</span>PLEIN AXE<small>CENTRE</small></button><button class="shootbtn" onclick="shoot('right')"><span>↗</span>PLEIN LUCARNE<small>DROITE</small></button></div>
+<div class="feedback" id="feedback">À toi de jouer !</div><div class="actions"><button class="btn btn-lime" id="nextSeries" onclick="newSeries()" disabled>NOUVELLE SÉRIE ↻</button><button class="btn btn-light" onclick="resetSeries()">RECOMMENCER</button></div>
+</div>
+<div class="panel"><div class="panelhead"><h2>CHOISIS TON DÉFI</h2><span class="eyetag">MODE DE JEU</span></div><div class="modegrid"><button class="modecard active" data-mode="normal"><b>🏟️ Match classique</b><span>5 tirs · progression classique</span></button><button class="modecard" data-mode="sudden"><b>💥 Mort subite</b><span>Premier arrêt = fin de série</span></button><button class="modecard" data-mode="precision"><b>🎯 Précision</b><span>Vise les angles pour le bonus</span></button><button class="modecard" data-mode="practice"><b>🧤 Entraînement</b><span>Joue sans affecter ton record</span></button></div><label for="difficulty">Niveau du gardien</label><select id="difficulty"><option value="easy">Débutant — plus accessible</option><option value="normal" selected>Amateur — équilibré</option><option value="hard">Expert — réflexes rapides</option></select></div>
+</section>
+<section id="page-duel" class="page hidden"><div class="panel"><div class="panelhead"><h2>DUEL ENTRE AMIS</h2><span class="eyetag">MÊME APPAREIL</span></div><p class="muted">Deux joueurs, cinq tirs chacun. Passe le téléphone après la première série. Le joueur qui marque le plus gagne le duel.</p><div class="row"><div><label for="p1">Joueur 1</label><input id="p1" maxlength="16" value="Joueur 1"></div><div><label for="p2">Joueur 2</label><input id="p2" maxlength="16" value="Joueur 2"></div></div><div class="duelbox" style="margin-top:12px"><div class="muted" id="duelTurn">Joueur 1 commence.</div><div class="duelscore"><div style="text-align:center"><span id="duelName1">JOUEUR 1</span><strong id="duelGoals1">0</strong></div><span>VS</span><div style="text-align:center"><span id="duelName2">JOUEUR 2</span><strong id="duelGoals2">0</strong></div></div><div class="muted" id="duelShots">5 tirs chacun · duel prêt</div><div class="actions"><button class="btn btn-lime" id="startDuel" onclick="startDuel()">LANCER LE DUEL</button><button class="btn btn-light" onclick="resetDuel()">RÉINITIALISER</button></div><div class="shootgrid"><button class="shootbtn" onclick="duelShoot('left')" id="dleft" disabled><span>↖</span>GAUCHE</button><button class="shootbtn" onclick="duelShoot('center')" id="dcenter" disabled><span>↑</span>CENTRE</button><button class="shootbtn" onclick="duelShoot('right')" id="dright" disabled><span>↗</span>DROITE</button></div><div class="feedback" id="duelFeedback"></div></div></div></section>
+<section id="page-ranked" class="page hidden">
+<div class="panel"><div class="panelhead"><h2>DUEL CLASSÉ</h2><span class="eyetag">MATCHMAKING XP</span></div>
+<p class="muted">Le principe : le jeu cherche un adversaire de niveau proche du tien. Plus tu gagnes, plus tu progresses dans les divisions. Cette maquette simule la recherche localement ; les vrais adversaires en ligne nécessitent un serveur commun et des comptes joueurs.</p>
+<div class="scoregrid"><div class="metric"><strong id="rankedDivision">BRONZE</strong><span>Division</span></div><div class="metric"><strong id="rankedXp">0</strong><span>Ton XP</span></div><div class="metric"><strong id="rankedRange">±100</strong><span>Plage de recherche</span></div></div>
+<div class="duelbox"><div class="levelrow"><div><div class="muted">ADVERSAIRE TROUVÉ</div><div class="levelname" id="opponentName">—</div></div><span class="levelchip" id="opponentDivision">EN ATTENTE</span></div>
+<p id="matchStatus" class="muted">Lance la recherche pour trouver un adversaire de niveau proche.</p>
+<div class="actions"><button class="btn btn-lime" id="findOpponent" onclick="findOpponent()">TROUVER UN ADVERSAIRE</button><button class="btn btn-light" onclick="resetRanked()">ANNULER</button></div>
+<div id="rankedGame" class="hidden"><div class="duelscore"><div style="text-align:center"><span id="rankedMeName">TOI</span><strong id="rankedMeGoals">0</strong></div><span>VS</span><div style="text-align:center"><span id="rankedOppName">RIVAL</span><strong id="rankedOppGoals">0</strong></div></div><p class="muted" id="rankedTurn">À toi de tirer : 5 tirs chacun.</p><div class="shootgrid"><button class="shootbtn" onclick="rankedShoot('left')"><span>↖</span>GAUCHE</button><button class="shootbtn" onclick="rankedShoot('center')"><span>↑</span>CENTRE</button><button class="shootbtn" onclick="rankedShoot('right')"><span>↗</span>DROITE</button></div><div id="rankedResult" class="feedback"></div></div>
+</div></div>
+<div class="notice"><b>Important :</b> aucune partie n'est envoyée sur internet dans cette version. Les pseudos adverses sont fictifs. Le mode classé en ligne sera activé après connexion à une base de données sécurisée.</div>
+</section>
+<section id="page-ranking" class="page hidden"><div class="panel"><div class="panelhead"><h2>LÉGENDE DES CLASSEMENTS</h2><span class="eyetag">CLASSEMENTS</span></div><div class="ranktabs"><button class="active" onclick="renderRank('world',this)">🌍 MONDIAL</button><button onclick="renderRank('fr',this)">🇫🇷 FRANCE</button><button onclick="renderRank('friends',this)">🤝 AMIS</button></div><div id="rankTable"></div><p class="muted">Classement de démonstration, complété par tes records locaux. Pour un classement mondial réellement partagé, il faudra créer des comptes et connecter une base de données en ligne.</p></div></section>
+<section id="page-profile" class="page hidden">
+<div class="panel"><div class="panelhead"><h2>🔐 CONNEXION AU COMPTE</h2><span class="eyetag">COMPTE JOUEUR</span></div><p class="muted">Associe ton compte pour retrouver ton profil sur plusieurs appareils. Les boutons ci-dessous préparent l’interface, mais la connexion Google/Facebook réelle nécessite encore une configuration OAuth et un serveur.</p><div class="account-grid"><button class="social-login google-login" onclick="demoSocialLogin('Google')">🌐 Continuer avec Google</button><button class="social-login facebook-login" onclick="demoSocialLogin('Facebook')">f Continuer avec Facebook</button></div><p id="socialLoginMsg" class="muted">Aucun compte externe connecté.</p></div>
+<div class="panel"><div class="panelhead"><h2>TON PROFIL DE JOUEUR</h2><span class="eyetag">CARTE JOUEUR</span></div><label for="nickname">Pseudo</label><input id="nickname" maxlength="18" placeholder="Ex. Tireur75"><label for="country">Pays</label><select id="country"><option value="FR">🇫🇷 France</option><option value="BE">🇧🇪 Belgique</option><option value="CH">🇨🇭 Suisse</option><option value="CA">🇨🇦 Canada</option><option value="GB">🇬🇧 Royaume-Uni</option><option value="ES">🇪🇸 Espagne</option><option value="PT">🇵🇹 Portugal</option><option value="OTHER">🌍 Autre pays</option></select><button class="btn btn-dark" style="width:100%;margin-top:12px" onclick="saveProfile()">ENREGISTRER LE PROFIL</button><p id="profileMsg" class="muted">Les informations sont sauvegardées sur cet appareil uniquement.</p><div class="scoregrid"><div class="metric"><strong id="profileGoals">0</strong><span>Buts cumulés</span></div><div class="metric"><strong id="profileXp">0</strong><span>XP gagnés</span></div><div class="metric"><strong id="profileBest">0</strong><span>Meilleure série</span></div></div></div></section>
+</div>
+<aside>
+<div class="panel"><div class="panelhead"><h2>CARTE DU JOUEUR</h2><span class="eyetag">SAISON 01</span></div><div class="levelrow"><div><div class="muted">TON NIVEAU</div><div class="levelname" id="levelName">DÉBUTANT</div></div><div class="levelchip" id="levelBadge">NIV. 01</div></div><div class="progress"><div id="xpbar"></div></div><div class="levelrow"><span class="muted" id="xpProgress">0 / 50 XP</span><b id="xp">0 XP</b></div><p class="muted" id="levelDesc">Marque des buts pour gagner de l'expérience.</p><div class="scoregrid"><div class="metric"><strong id="totalGoals">0</strong><span>Buts totaux</span></div><div class="metric"><strong id="accuracy">0%</strong><span>Réussite</span></div><div class="metric"><strong id="seriesCount">0</strong><span>Séries</span></div></div></div>
+<div class="panel"><div class="panelhead"><h2>BADGES DÉBLOQUÉS</h2><span class="eyetag">RÉCOMPENSES</span></div><div class="badges" id="badges"><span class="pill">🔒 Premier but</span></div></div>
+<div class="panel"><div class="panelhead"><h2>DERNIÈRE PERFORMANCE</h2><span class="eyetag">RÉCAP</span></div><div id="lastResult" class="muted">Joue ta première série pour afficher tes statistiques.</div></div>
+<div class="notice"><b>À savoir</b><br>Version prototype gratuite : aucun pari d'argent, aucune publicité intégrée et aucun compte en ligne. Les classements et duels réseau sont des étapes de développement futures, pas encore des fonctions en ligne.</div>
+</aside>
+</div>
+
+<section class="panel economy-panel" id="economyPanel">
+  <div class="panelhead"><h2>⚡ ÉNERGIE & DÉFIS</h2><span class="eyetag">SAISON 01</span></div>
+  <div class="energy-head"><div><div class="econ-note">TON ÉNERGIE</div><div class="energy-number"><span id="paEnergy">25</span> / 50 ⚡</div></div><button class="btn btn-light" id="paClaimDailyEnergy">Récupérer +10 ⚡</button></div>
+  <div class="energy-track"><div class="energy-fill" id="paEnergyFill"></div></div>
+  <div class="econ-note">Bonus quotidien : +10 ⚡ gratuits chaque jour (sans dépasser 50 ⚡). Duel classé : 5 ⚡ · Mini-tournoi : 5 ⚡ · Partie amicale : gratuite. L’énergie est sauvegardée sur cet appareil.</div>
+  <div class="actions" style="margin-top:12px">
+    <button class="btn btn-lime" id="paGoRanked">JOUER CLASSÉ · 5 ⚡</button>
+    <button class="btn btn-light" id="paFriendly">PARTIE AMICALE · GRATUIT</button>
+  </div>
+  <div class="divider" style="height:1px;background:rgba(255,255,255,.2);margin:18px 0"></div>
+  <div class="panelhead"><h2>🎯 DÉFIS QUOTIDIENS</h2><span class="eyetag" id="paChallengeDate">AUJOURD’HUI</span></div>
+  <div id="paChallenges"></div>
+  <div class="econ-note">Prototype : les défis sont validés manuellement pour tester le système. Dans la version finale, ils devront se valider automatiquement selon les statistiques réelles des matchs.</div>
+  <div class="divider" style="height:1px;background:rgba(255,255,255,.2);margin:18px 0"></div>
+  <div class="panelhead"><h2>🧰 BOUTIQUE DE COFFRES</h2><span class="eyetag">OBJETS VIRTUELS</span></div>
+  <div class="econ-grid">
+    <div class="econ-card"><h3>🥉 Coffre classique</h3><p>Pièces virtuelles et éléments cosmétiques de base.</p><button class="btn btn-light paChest" data-chest="classic">Acheter · 100 pièces</button></div>
+    <div class="econ-card"><h3>🥇 Coffre premium</h3><p>Cosmétiques plus rares et éléments de personnalisation.</p><button class="btn btn-light paChest" data-chest="premium">Acheter · 250 pièces</button></div>
+  </div>
+  <p class="econ-note">Les coffres sont achetés avec des pièces virtuelles de démonstration, pas avec de l’argent réel. Aucun paiement n’est connecté dans ce prototype.</p>
+  <div class="divider" style="height:1px;background:rgba(255,255,255,.2);margin:18px 0"></div>
+  <div class="panelhead"><h2>💳 ACHAT D’ÉNERGIE</h2><span class="eyetag">BOUTIQUE</span></div>
+  <div class="shop-grid">
+    <div class="shop-item"><div><strong>25 ⚡</strong><div class="price">0,99 €</div><small>Petit pack</small></div><button class="paBuy" data-energy="25">Choisir</button></div>
+    <div class="shop-item"><div><strong>75 ⚡</strong><div class="price">1,99 €</div><small>Meilleure valeur</small></div><button class="paBuy" data-energy="75">Choisir</button></div>
+    <div class="shop-item"><div><strong>200 ⚡</strong><div class="price">4,99 €</div><small>Pack économique</small></div><button class="paBuy" data-energy="200">Choisir</button></div>
+  </div>
+  <p class="econ-note">Boutique visuelle uniquement : les boutons simulent l’achat pour tester l’interface. Aucun argent n’est prélevé et aucun achat réel n’est possible sans intégrer un prestataire de paiement et un système sécurisé.</p>
+  <div class="divider" style="height:1px;background:rgba(255,255,255,.2);margin:18px 0"></div>
+  <div class="panelhead"><h2>🏆 MINI-TOURNOI</h2><span class="eyetag">16 JOUEURS MAX.</span></div>
+  <p class="econ-note">Choisis ton tournoi : 16 joueurs maximum pour chaque format. Si tu remportes le tournoi, tu gagnes les étoiles indiquées.</p>
+  <div class="econ-grid">
+    <div class="econ-card"><h3>🥉 Tournoi amateur</h3><p>16 joueurs · Récompense vainqueur : <b>5 ⭐</b></p><button class="btn btn-light paTournamentTier" data-cost="5" data-reward="5">Entrer · 5 ⚡</button></div>
+    <div class="econ-card"><h3>🥈 Tournoi confirmé</h3><p>16 joueurs · Récompense vainqueur : <b>10 ⭐</b></p><button class="btn btn-light paTournamentTier" data-cost="10" data-reward="10">Entrer · 10 ⚡</button></div>
+    <div class="econ-card"><h3>🥇 Tournoi élite</h3><p>16 joueurs max. · Récompense vainqueur : <b>25 ⭐</b></p><button class="btn btn-light paTournamentTier" data-cost="25" data-reward="25">Entrer · 25 ⚡</button></div>
+  </div>
+  <div class="actions"><button class="btn btn-light" id="paResetTournament">Réinitialiser le tournoi local</button></div>
+  <div id="paTournamentStatus" class="econ-note" style="margin-top:10px">Choisis un format pour participer à un tournoi de démonstration.</div>
+  <ol id="paTournamentList" class="tourney-list"></ol>
+  <p class="econ-note">Tournoi local de démonstration : les autres participants sont fictifs. Pour inviter de vrais joueurs, il faudra des comptes en ligne et un serveur partagé.</p>
+</section>
+
+</main>
+<div class="footer">PENALTY ARENA · Prototype jouable local · Les scores sont conservés dans ce navigateur, sans synchronisation internet.</div>
+<script>
+const levels=[{name:'Débutant',xp:0},{name:'Amateur',xp:50},{name:'Confirmé',xp:150},{name:'Expert',xp:300},{name:'Élite',xp:500},{name:'Légende',xp:800}];
+let state={shots:0,goals:0,totalShots:0,totalGoals:0,xp:0,series:0,best:Number(localStorage.getItem('pa_best')||0),finished:false,mode:'normal',practice:false,history:JSON.parse(localStorage.getItem('pa_history')||'[]'),badges:JSON.parse(localStorage.getItem('pa_badges')||'[]')};
+let duel={active:false,player:1,shots:[0,0],goals:[0,0],done:false};
+const $=id=>document.getElementById(id);
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!=='page-'+b.dataset.tab));if(b.dataset.tab==='ranking')renderRank('world',document.querySelector('.ranktabs button'));});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));state.mode=b.dataset.mode;state.practice=state.mode==='practice';$('pitchHint').textContent=({normal:'5 tirs pour faire la différence.',sudden:'Attention : un arrêt peut mettre fin à la série.',precision:'Vise les coins pour tenter le tir parfait.',practice:'Mode entraînement : tes tirs ne changent pas le record.'})[state.mode];newSeries()});
+$('difficulty').onchange=()=>{$('difficultyLabel').textContent='GARDIEN : '+({easy:'DÉBUTANT',normal:'AMATEUR',hard:'EXPERT'})[$('difficulty').value]};
+function getLevel(){let l=levels[0];for(const a of levels)if(state.xp>=a.xp)l=a;return l}
+function update(){
+ $('goals').textContent=state.goals;$('attempts').textContent=state.shots+'/5';$('record').textContent=state.best;$('totalGoals').textContent=state.totalGoals;$('seriesCount').textContent=state.series;
+ $('accuracy').textContent=state.totalShots?Math.round(state.totalGoals/state.totalShots*100)+'%':'0%';
+ const l=getLevel(),idx=levels.findIndex(a=>a.name===l.name),next=levels[Math.min(idx+1,levels.length-1)];
+ $('levelName').textContent=l.name.toUpperCase();$('levelBadge').textContent='NIV. '+String(idx+1).padStart(2,'0');$('xp').textContent=state.xp+' XP';$('topXp').textContent=state.xp+' XP';$('topLevel').textContent=l.name.toUpperCase();$('profileGoals').textContent=state.totalGoals;$('profileXp').textContent=state.xp;$('profileBest').textContent=state.best;
+ const pct=idx===levels.length-1?100:Math.min(100,(state.xp-l.xp)/(next.xp-l.xp)*100);$('xpbar').style.width=pct+'%';$('xpProgress').textContent=idx===levels.length-1?'NIVEAU MAXIMUM':`${state.xp} / ${next.xp} XP`;$('levelDesc').textContent=idx===levels.length-1?'Tu es une légende de Penalty Arena !':`${next.xp-state.xp} XP avant le niveau ${next.name}.`;
+ const all=[['Premier but',state.totalGoals>=1,'⚽'],['Hat-trick',state.totalGoals>=3,'🎯'],['Série parfaite',state.history.some(h=>h.goals===5&&!h.practice),'🏆'],['10 buts',state.totalGoals>=10,'🔥'],['100 tirs',state.totalShots>=100,'💪']];
+ all.forEach(([name,ok])=>{if(ok&&!state.badges.includes(name))state.badges.push(name)});localStorage.setItem('pa_badges',JSON.stringify(state.badges));
+ $('badges').innerHTML=all.map(([n,ok,ico])=>`<span class="pill" style="margin:2px;background:${ok?'#e3f7e9':'#edf0ed'};color:${ok?'#185c35':'#859187'}">${ok?ico:'🔒'} ${n}</span>`).join('');
+}
+function shoot(dir){
+ if(state.finished||state.shots>=5)return;
+ state.shots++;state.totalShots++;
+ const pitch=document.querySelector('#page-play .pitch');
+ const keeperEl=$('keeper'),ballEl=$('ball');
+ const difficulty=$('difficulty').value,saveChance={easy:.22,normal:.38,hard:.55}[difficulty];
+ const keeperDir=['left','center','right'][Math.floor(Math.random()*3)];
+ const x={left:'18%',center:'50%',right:'82%'}[dir];
+ $('target').style.left=`calc(${x} - 12px)`;$('target').style.top=dir==='center'?'12px':'15px';$('target').classList.add('show');
+ const styles=['shot-power','shot-curve','shot-chip',''];
+ pitch.classList.remove('is-shooting','shot-power','shot-curve','shot-chip');
+ keeperEl.classList.remove('keeper-left','keeper-center','keeper-right');
+ void pitch.offsetWidth;
+ const style=styles[Math.floor(Math.random()*styles.length)];
+ if(style)pitch.classList.add(style);
+ ballEl.style.setProperty('--dx',({left:'-105px',center:'0px',right:'105px'}[dir]));
+ keeperEl.classList.add(({left:'keeper-left',center:'keeper-center',right:'keeper-right'}[keeperDir]));
+ pitch.classList.add('is-shooting');
+ let saved=dir===keeperDir||Math.random()<saveChance;
+ if(state.mode==='precision'&&dir!=='center'&&dir!==keeperDir)saved=Math.random()<saveChance*.45;
+ if(!saved){state.goals++;if(!state.practice)state.totalGoals++;if(!state.practice)state.xp+=10;$('feedback').textContent=state.mode==='precision'?'🎯 TIR CADRÉ ! +10 XP':'⚽ BUT ! +10 XP';$('feedback').className='feedback good';}
+ else{if(!state.practice)state.xp+=2;$('feedback').textContent='🧤 ARRÊT DU GARDIEN ! +2 XP';$('feedback').className='feedback bad';}
+ setTimeout(()=>{pitch.classList.remove('is-shooting','shot-power','shot-curve','shot-chip');keeperEl.classList.remove('keeper-left','keeper-center','keeper-right');keeperEl.style.left='50%';keeperEl.style.transform='translateX(-50%)';ballEl.style.transform='translate3d(0,0,0)';},850);
+ let stop=state.mode==='sudden'&&saved;
+ if(state.shots===5||stop){setTimeout(()=>finishSeries(stop),500);return}
+ update();
+}
+function finishSeries(stop){
+ state.finished=true;state.series++;
+ if(!state.practice && state.goals>=3){
+   try{window.paClubAwardWin()}catch(e){}
+ }
+ if(!state.practice&&state.goals>state.best){state.best=state.goals;localStorage.setItem('pa_best',state.best)}
+ if(!state.practice){state.history.unshift({goals:state.goals,shots:state.shots,date:new Date().toLocaleDateString('fr-FR'),mode:state.mode});state.history=state.history.slice(0,20);localStorage.setItem('pa_history',JSON.stringify(state.history))}
+ $('nextSeries').disabled=false;document.querySelectorAll('.shootbtn').forEach(b=>b.disabled=true);
+ $('feedback').textContent=`FIN DE SÉRIE : ${state.goals}/${state.shots} but(s)${stop?' · Mort subite':''}`;$('feedback').className='feedback';
+ $('lastResult').innerHTML=`<b>${state.goals}/${state.shots}</b> but(s) lors de ta dernière série.<br>${state.practice?'Mode entraînement : statistiques de carrière inchangées.':`Record personnel : ${state.best} but(s).`}<br><span class="muted">${new Date().toLocaleDateString('fr-FR')}</span>`;
+ update();renderRank('world');
+}
+function newSeries(){state.shots=0;state.goals=0;state.finished=false;$('nextSeries').disabled=true;document.querySelectorAll('#page-play .shootbtn').forEach(b=>b.disabled=false);$('ball').style.transform='translate3d(0,0,0)';$('keeper').style.left='50%';$('keeper').style.transform='translateX(-50%)';document.querySelector('#page-play .pitch').classList.remove('is-shooting','shot-power','shot-curve','shot-chip');$('keeper').classList.remove('keeper-left','keeper-center','keeper-right');$('target').classList.remove('show');$('feedback').textContent='Nouvelle série. Reste concentré !';$('feedback').className='feedback';$('sessionTag').textContent='SÉRIE '+String(state.series+1).padStart(2,'0');update()}
+function resetSeries(){newSeries()}
+function renderRank(type,btn){if(btn){document.querySelectorAll('.ranktabs button').forEach(b=>b.classList.toggle('active',b===btn))}
+ const pseudo=$('nickname').value.trim()||localStorage.getItem('pa_nick')||'Tireur local';const country=$('country').value||localStorage.getItem('pa_country')||'FR';
+ let rows=type==='fr'?[['TopCorner','🇫🇷',620],['FrappeSèche','🇫🇷',540],['GardienBattu','🇫🇷',480]]:type==='friends'?[['Alex','🤝',170],['Sam','🤝',140],['Max','🤝',90]]:[['GoalMachine','🇧🇷',890],['PenaltyKing','🇫🇷',810],['TopCorner','🇩🇪',760]];
+ rows.push([pseudo,country==='FR'?'🇫🇷':country==='BE'?'🇧🇪':country==='CH'?'🇨🇭':country==='CA'?'🇨🇦':country==='GB'?'🇬🇧':country==='ES'?'🇪🇸':country==='PT'?'🇵🇹':'🌍',state.xp,true]);rows.sort((a,b)=>b[2]-a[2]);
+ $('rankTable').innerHTML='<table><thead><tr><th>POS.</th><th>JOUEUR</th><th>XP</th></tr></thead><tbody>'+rows.map((r,i)=>`<tr class="${r[3]?'yourow':''}"><td class="ranknum">${i+1}</td><td>${r[1]} ${esc(r[0])}${r[3]?' · TOI':''}</td><td><b>${r[2]}</b></td></tr>`).join('')+'</tbody></table>';
+}
+function saveProfile(){const p=$('nickname').value.trim()||'Tireur local';localStorage.setItem('pa_nick',p);localStorage.setItem('pa_country',$('country').value);$('profileMsg').textContent='Profil enregistré sur cet appareil.';renderRank('world');}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function startDuel(){duel={active:true,player:1,shots:[0,0],goals:[0,0],done:false};$('duelFeedback').textContent='C’est parti !';$('startDuel').disabled=true;['dleft','dcenter','dright'].forEach(id=>$(id).disabled=false);updateDuel()}
+function duelShoot(dir){if(!duel.active||duel.done)return;const i=duel.player-1;duel.shots[i]++;const keeper=['left','center','right'][Math.floor(Math.random()*3)];const saved=keeper===dir||Math.random()<.32;if(!saved)duel.goals[i]++;$('duelFeedback').textContent=saved?'🧤 Arrêt du gardien !':'⚽ BUT !';if(duel.shots[i]>=5){if(duel.player===1){duel.player=2;$('duelTurn').textContent='Passe le téléphone : '+($('p2').value||'Joueur 2')+' est à toi !'}else{duel.done=true;duel.active=false;$('duelTurn').textContent=duel.goals[0]===duel.goals[1]?'Égalité ! Relancez un duel.':(duel.goals[0]>duel.goals[1]?$('p1').value:$('p2').value)+' remporte le duel !';['dleft','dcenter','dright'].forEach(id=>$(id).disabled=true);$('startDuel').disabled=false;}}
+ updateDuel()}
+function updateDuel(){$('duelName1').textContent=($('p1').value||'Joueur 1').toUpperCase();$('duelName2').textContent=($('p2').value||'Joueur 2').toUpperCase();$('duelGoals1').textContent=duel.goals[0];$('duelGoals2').textContent=duel.goals[1];$('duelShots').textContent=`Tirs : ${duel.shots[0]}/5 — ${duel.shots[1]}/5`;if(duel.active)$('duelTurn').textContent='Au tour de '+(duel.player===1?$('p1').value||'Joueur 1':$('p2').value||'Joueur 2');}
+function resetDuel(){duel={active:false,player:1,shots:[0,0],goals:[0,0],done:false};$('duelTurn').textContent='Joueur 1 commence.';$('duelFeedback').textContent='';$('startDuel').disabled=false;['dleft','dcenter','dright'].forEach(id=>$(id).disabled=true);updateDuel()}
+
+const rankedState={active:false,done:false,shots:0,goals:0,oppGoals:0,oppName:'',oppXp:0};
+function divisionFor(xp){if(xp<50)return 'BRONZE';if(xp<150)return 'ARGENT';if(xp<300)return 'OR';if(xp<500)return 'PLATINE';if(xp<800)return 'DIAMANT';return 'LÉGENDE'}
+function findOpponent(){
+ const xp=state.xp,band=Math.max(25,Math.round((xp+50)*.18/10)*10);
+ const names=['FrappeSèche','TireurPro','FootAddict','TopCorner','PenaltyFox','UltrasShot','Capitaine10'];
+ rankedState.active=true;rankedState.done=false;rankedState.shots=0;rankedState.goals=0;
+ rankedState.oppXp=Math.max(0,xp+Math.floor(Math.random()*(band*2+1))-band);
+ rankedState.oppName=names[Math.floor(Math.random()*names.length)];
+ rankedState.oppGoals=0;
+ $('rankedDivision').textContent=divisionFor(xp);$('rankedXp').textContent=xp;$('rankedRange').textContent='±'+band;
+ $('opponentName').textContent=rankedState.oppName;$('opponentDivision').textContent=divisionFor(rankedState.oppXp);
+ $('matchStatus').textContent=`Adversaire trouvé dans une plage de ${band} XP. Match simulé contre un joueur fictif.`;
+ $('rankedMeName').textContent=($('nickname').value.trim()||'TOI').toUpperCase();$('rankedOppName').textContent=rankedState.oppName.toUpperCase();
+ $('rankedMeGoals').textContent='0';$('rankedOppGoals').textContent='0';$('rankedResult').textContent='';
+ $('rankedGame').classList.remove('hidden');$('findOpponent').disabled=true;
+}
+function rankedShoot(dir){
+ if(!rankedState.active||rankedState.done)return;
+ rankedState.shots++;
+ const keeper=['left','center','right'][Math.floor(Math.random()*3)];
+ if(dir!==keeper&&Math.random()>.25)rankedState.goals++;
+ // Simulate the opponent's shot on each round so a full match finishes in five user shots.
+ const oppKeeper=['left','center','right'][Math.floor(Math.random()*3)];
+ if(Math.random()>.48)rankedState.oppGoals++;
+ $('rankedMeGoals').textContent=rankedState.goals;$('rankedOppGoals').textContent=rankedState.oppGoals;
+ $('rankedTurn').textContent=`Tir ${rankedState.shots}/5 · ${rankedState.goals} but(s) pour toi, ${rankedState.oppGoals} pour ${rankedState.oppName}.`;
+ if(rankedState.shots>=5){
+  rankedState.done=true;rankedState.active=false;
+  let result=rankedState.goals>rankedState.oppGoals?'VICTOIRE ! +25 XP':rankedState.goals<rankedState.oppGoals?'DÉFAITE · continue à t’entraîner':'MATCH NUL · +5 XP';
+  if(rankedState.goals>rankedState.oppGoals)state.xp+=25;else if(rankedState.goals===rankedState.oppGoals)state.xp+=5;
+  try{window.paClubAwardRankedMatch()}catch(e){}
+  $('rankedResult').textContent=result+' · +2 ⭐ club';$('rankedTurn').textContent='Match terminé : '+rankedState.goals+' - '+rankedState.oppGoals+' · Tu gagnes 2 étoiles de club.';
+  $('findOpponent').disabled=false;update();
+ }
+}
+function resetRanked(){rankedState.active=false;rankedState.done=false;$('rankedGame').classList.add('hidden');$('findOpponent').disabled=false;$('opponentName').textContent='—';$('opponentDivision').textContent='EN ATTENTE';$('matchStatus').textContent='Recherche annulée. Tu peux relancer quand tu veux.'}
+
+(function init(){ $('nickname').value=localStorage.getItem('pa_nick')||'';$('country').value=localStorage.getItem('pa_country')||'FR';$('difficulty').onchange();update();renderRank('world');updateDuel();})();
+
+
+// Club development system: local prototype; no shared online server.
+(function(){
+  const CLUB_KEY='pa_club_v1';
+  const buildings=[
+    {id:'stadium',name:'Stade',icon:'🏟️',desc:'Augmente le prestige et la capacité de ton club.'},
+    {id:'locker',name:'Vestiaires',icon:'🚿',desc:'Améliore le confort et les conditions de ton équipe.'},
+    {id:'vip',name:'Loges',icon:'🛋️',desc:'Développe l’accueil des supporters et partenaires.'},
+    {id:'training',name:'Centre d’entraînement',icon:'🎯',desc:'Le centre de travail pour progresser au quotidien.'},
+    {id:'youth',name:'Centre de formation jeunes',icon:'🌱',desc:'Forme les futures pépites de ton club.'},
+    {id:'medical',name:'Centre médical',icon:'🩺',desc:'Développe la préparation et le suivi des joueurs.'}
+  ];
+  const fresh=()=>({division:1,stars:0,wins:0,levels:{stadium:0,locker:0,vip:0,training:0,youth:0,medical:0}});
+  let club;
+  try{club=JSON.parse(localStorage.getItem(CLUB_KEY)||'null')||fresh()}catch(e){club=fresh()}
+  if(!club.levels)club=fresh();
+  for(const b of buildings)if(typeof club.levels[b.id]!=='number')club.levels[b.id]=0;
+  function save(){localStorage.setItem(CLUB_KEY,JSON.stringify(club));render();}
+  function upgradeCost(level){return 25*level*(level+1)/2;}
+  function totalLevel(){return buildings.reduce((sum,b)=>sum+club.levels[b.id],0);}
+  function requiredLevel(){return club.division;}
+  function canPromote(){return club.division<30&&buildings.every(b=>club.levels[b.id]>=club.division);}
+  function renderBuildings(){
+    const container=document.getElementById('clubBuildings');
+    container.innerHTML=buildings.map(b=>{
+      const lvl=club.levels[b.id],next=lvl+1,cost=next<=30?upgradeCost(next):0;
+      const canBuy=next<=30&&club.stars>=cost;
+      return `<article class="building-card">
+        <div class="building-icon">${b.icon}</div><h3>${b.name}</h3>
+        <div class="building-level">Niveau ${lvl} / 30</div>
+        <div class="club-progress"><div style="width:${lvl/30*100}%"></div></div>
+        <p>${b.desc}</p>
+        ${next<=30?`<p>Prochaine amélioration : <b>${cost.toLocaleString('fr-FR')} ⭐</b></p>`:'<p>Infrastructure au niveau maximum !</p>'}
+        <button data-upgrade="${b.id}" ${canBuy?'':'disabled'}>${next<=30?'Améliorer au niveau '+next:'Niveau maximum'}</button>
+      </article>`;
+    }).join('');
+    container.querySelectorAll('[data-upgrade]').forEach(btn=>btn.onclick=()=>{
+      const b=buildings.find(x=>x.id===btn.dataset.upgrade),next=club.levels[b.id]+1,cost=upgradeCost(next);
+      if(next>30||club.stars<cost){alert('Tu n’as pas assez d’étoiles pour cette amélioration.');return;}
+      club.stars-=cost;club.levels[b.id]=next;save();
+      alert(`${b.name} passe au niveau ${next} !`);
+    });
+  }
+  function renderDivisions(){
+    const container=document.getElementById('clubDivisionList');
+    container.innerHTML=Array.from({length:30},(_,i)=>{
+      const n=i+1,cls=n===club.division?'current':n<club.division?'done':'';
+      return `<div class="division-chip ${cls}">${n<club.division?'✓ ':''}Division ${n}</div>`;
+    }).join('');
+  }
+  function render(){
+    document.getElementById('clubDivision').textContent=club.division+' / 30';
+    document.getElementById('clubStars').textContent=club.stars.toLocaleString('fr-FR')+' ⭐';
+    document.getElementById('clubWins').textContent=club.wins;
+    const required=requiredLevel();
+    const done=buildings.filter(b=>club.levels[b.id]>=required).length;
+    document.getElementById('clubProgressLabel').textContent=done+' / '+buildings.length;
+    document.getElementById('clubProgressFill').style.width=(done/buildings.length*100)+'%';
+    document.getElementById('clubDivisionHint').textContent=club.division===30
+      ? 'Division 30 atteinte ! Tu es au sommet de Penalty Arena.'
+      : `Pour passer en division ${club.division+1}, chaque infrastructure doit atteindre au moins le niveau ${club.division}. ${done}/${buildings.length} infrastructures sont prêtes.`;
+    const promote=document.getElementById('clubPromote');
+    promote.disabled=!canPromote();
+    promote.textContent=club.division===30?'DIVISION MAXIMUM ATTEINTE':`VALIDER LA MONTÉE EN DIVISION ${club.division+1}`;
+    renderBuildings();renderDivisions();
+  }
+  document.getElementById('clubPromote').onclick=()=>{
+    if(!canPromote()){alert('Il faut améliorer toutes les infrastructures au niveau requis avant de monter de division.');return;}
+    club.division++;save();alert(`Félicitations ! Tu passes en division ${club.division} !`);
+  };
+  window.paClubAwardWin=function(){
+    // Reward increases with division: division 1 gives 25 stars, division 2 gives 50, etc.
+    // Building upgrade costs are 25, 75, 150, 250... stars for levels 1, 2, 3, 4...
+    const reward=25*club.division;
+    club.wins++;club.stars+=reward;save();
+    const box=document.getElementById('lastResult');
+    if(box)box.innerHTML+=`<br><b>⭐ Victoire du club : +${reward} étoiles !</b>`;
+  };
+  window.paClubAwardRankedMatch=function(){
+    club.stars+=2;save();
+    const box=document.getElementById('lastResult');
+    if(box)box.innerHTML+=`<br><b>⭐ Match classé terminé : +2 étoiles !</b>`;
+  };
+  window.paClubAwardTournament=function(reward){
+    club.stars+=Number(reward)||0;save();
+  };
+  render();
+})();
+
+// Penalty Arena economy prototype — local storage only; no real payments/network.
+(function(){
+  const KEY='pa_economy_v1';
+  const today=()=>new Date().toISOString().slice(0,10);
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+  let econ=read();
+  if(econ.date!==today()){
+    econ.date=today(); econ.energy=25; econ.claimed=[]; econ.dailyRefillUsed=false;
+  }
+  if(typeof econ.energy!=='number')econ.energy=25;
+  if(!Array.isArray(econ.claimed))econ.claimed=[];
+  if(!Array.isArray(econ.tournament))econ.tournament=[];
+  if(typeof econ.coins!=='number')econ.coins=250;
+  function save(){localStorage.setItem(KEY,JSON.stringify(econ));renderEnergy();renderChallenges();renderTournament();}
+  function renderEnergy(){
+    const e=Math.max(0,Math.min(50,econ.energy));
+    document.getElementById('paEnergy').textContent=e;
+    document.getElementById('paEnergyFill').style.width=(e/50*100)+'%';
+    document.getElementById('paClaimDailyEnergy').disabled=!!econ.dailyRefillUsed;
+    document.getElementById('paClaimDailyEnergy').textContent=econ.dailyRefillUsed?'Bonus récupéré aujourd’hui':'Récupérer +10 ⚡';
+  }
+  const challenges=[
+    {id:'save5',title:'Muraille',desc:'Réussis 5 arrêts de gardien.',reward:'+20 XP · +5 ⚡',energy:5,xp:20},
+    {id:'goals10',title:'Buteur',desc:'Marque 10 buts dans tes séries.',reward:'+25 XP · +50 pièces',coins:50,xp:25},
+    {id:'win2',title:'Gagneur',desc:'Remporte 2 duels classés.',reward:'+40 XP · +10 ⚡',energy:10,xp:40}
+  ];
+  function renderChallenges(){
+    document.getElementById('paChallengeDate').textContent=today();
+    document.getElementById('paChallenges').innerHTML=challenges.map(c=>{
+      const done=econ.claimed.includes(c.id);
+      return `<div class="challenge-row"><div><b>${c.title}</b><p>${c.desc}</p><p>Récompense : ${c.reward}</p></div><button data-claim="${c.id}" ${done?'disabled':''}>${done?'Récupéré':'Valider'}</button></div>`;
+    }).join('');
+    document.querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>{
+      const c=challenges.find(x=>x.id===b.dataset.claim);
+      if(!c||econ.claimed.includes(c.id))return;
+      econ.claimed.push(c.id); econ.energy=Math.min(50,econ.energy+(c.energy||0));econ.coins+=c.coins||0;
+      if(typeof state!=='undefined'){state.xp+=c.xp;try{update()}catch(e){}}
+      alert('Défi récupéré ! Récompenses ajoutées à ton compte de démonstration.');
+      save();
+    });
+  }
+  function renderTournament(){
+    const list=document.getElementById('paTournamentList');
+    list.innerHTML=econ.tournament.map((n,i)=>`<li>${n}${i===0?' (toi)':''}</li>`).join('');
+    document.getElementById('paTournamentStatus').textContent=econ.tournament.length
+      ? `Tournoi local créé · ${econ.tournament.length}/16 joueurs inscrits · ${Math.max(0,16-econ.tournament.length)} place(s) restante(s).`
+      : 'Aucun tournoi créé pour le moment.';
+  }
+  function spend(amount){
+    if(econ.energy<amount){alert('Pas assez d’énergie. Termine les défis quotidiens ou reviens après la recharge.');return false;}
+    econ.energy-=amount;save();return true;
+  }
+  document.getElementById('paClaimDailyEnergy').onclick=()=>{
+    if(econ.dailyRefillUsed){alert('Tu as déjà récupéré tes 10 ⚡ gratuits aujourd’hui. Reviens demain !');return;}
+    const before=econ.energy;
+    econ.energy=Math.min(50,econ.energy+10);
+    const received=econ.energy-before;
+    econ.dailyRefillUsed=true;save();
+    alert(received>0?`Bonus quotidien récupéré : +${received} ⚡ !`:'Ton énergie est déjà au maximum (25 ⚡). Ton bonus quotidien est consommé.');
+  };
+  document.getElementById('paGoRanked').onclick=()=>{
+    document.querySelector('[data-tab="ranked"]').click();
+    document.getElementById('findOpponent').click();
+  };
+  document.getElementById('paFriendly').onclick=()=>{
+    document.querySelector('[data-tab="play"]').click();
+    alert('Mode amical gratuit : tu peux jouer sans dépenser d’énergie.');
+  };
+  // Ensure the normal ranked button also costs 5 energy, including attempts from the ranked tab.
+  const originalFindOpponent=window.findOpponent;
+  if(typeof originalFindOpponent==='function'){
+    window.findOpponent=function(){
+      if(!spend(5))return;
+      originalFindOpponent();
+    };
+  }
+  document.querySelectorAll('.paTournamentTier').forEach(b=>b.onclick=()=>{
+    const cost=Number(b.dataset.cost),reward=Number(b.dataset.reward);
+    if(econ.energy<cost){alert(`Pas assez d’énergie : ce tournoi coûte ${cost} ⚡. Tu en as ${econ.energy}.`);return;}
+    if(econ.tournament.length>=16){alert('Ce tournoi local est complet : 16 joueurs maximum. Réinitialise-le pour tester un autre format.');return;}
+    const nick=(document.getElementById('nickname').value.trim()||'Joueur local').slice(0,18);
+    if(econ.tournament.includes(nick)){alert('Ton pseudo est déjà inscrit au tournoi local. Réinitialise le tournoi pour en essayer un autre.');return;}
+    econ.energy-=cost;
+    econ.tournament=[nick];
+    const bots=['PenaltyKing','GardienPro','Tireur75','FootMaster','Muraille99','Champion16','GoalHunter','Reflexe10','LégendeFC','TopCorner','JoueurBleu','StrikerX','CleanSheet','ButEnOr','FinalBoss'];
+    while(econ.tournament.length<16){
+      const candidate=bots[Math.floor(Math.random()*bots.length)];
+      if(!econ.tournament.includes(candidate))econ.tournament.push(candidate);
+      else {
+        const unique='Joueur'+(econ.tournament.length+1);
+        if(!econ.tournament.includes(unique))econ.tournament.push(unique);
+      }
+    }
+    const won=Math.random()<0.18; // Approximate chance to win against 15 opponents in this local demo.
+    if(won){
+      if(typeof window.paClubAwardTournament==='function')window.paClubAwardTournament(reward);
+      document.getElementById('paTournamentStatus').textContent=`Tournoi terminé : victoire de ${nick} ! +${reward} ⭐ gagnées.`;
+      alert(`Incroyable, tu as remporté le tournoi ! +${reward} étoiles pour ton club.`);
+    }else{
+      document.getElementById('paTournamentStatus').textContent=`Tournoi terminé : ${nick} a participé au format ${cost} ⚡, mais un adversaire fictif remporte la finale. Récompense vainqueur : ${reward} ⭐.`;
+      alert(`Tournoi terminé. Cette fois, un adversaire fictif gagne. Le vainqueur aurait reçu ${reward} étoiles.`);
+    }
+    econ.tournamentCost=cost;econ.tournamentReward=reward;save();
+  });
+  document.getElementById('paResetTournament').onclick=()=>{
+    if(confirm('Réinitialiser le tournoi local ?')){econ.tournament=[];save();}
+  };
+  document.querySelectorAll('.paBuy').forEach(b=>b.onclick=()=>{
+    const amount=Number(b.dataset.energy);
+    alert(`Pack ${amount} énergie sélectionné. Dans cette maquette, aucun paiement réel n’est activé. Pour une vraie boutique, il faudra connecter un prestataire de paiement et vérifier les achats côté serveur.`);
+  });
+  document.querySelectorAll('.paChest').forEach(b=>b.onclick=()=>{
+    const cost=b.dataset.chest==='premium'?250:100;
+    if(econ.coins<cost){alert(`Il te manque des pièces. Solde de démonstration : ${econ.coins} pièces.`);return;}
+    econ.coins-=cost;
+    const reward=b.dataset.chest==='premium'?'🧤 Gants premium débloqués !':'👕 Élément cosmétique débloqué !';
+    save();alert(`${reward}\nSolde restant : ${econ.coins} pièces.`);
+  });
+  // Expose the simulated wallet for future UI expansion.
+  window.paEconomy={getState:()=>({...econ}),addEnergy:n=>{econ.energy=Math.min(50,econ.energy+n);save();}};
+  save();
+})();
+
+
+// Connexion sociale et invitations : interface de démonstration locale.
+function demoSocialLogin(provider){
+  const msg=document.getElementById('socialLoginMsg');
+  msg.textContent='Connexion '+provider+' non activée : il faut configurer OAuth et un serveur sécurisé pour connecter un vrai compte.';
+}
+(function(){
+  const INVITE_KEY='pa_invite_v1';
+  const FRIENDS_KEY='pa_friends_v1';
+  const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}};
+  let invite=read(INVITE_KEY,{code:'',rewardClaimed:false});
+  let friends=read(FRIENDS_KEY,[]);
+  const codeEl=document.getElementById('paInviteCode');
+  const statusEl=document.getElementById('paInviteStatus');
+  const listEl=document.getElementById('paFriendsList');
+  function save(){localStorage.setItem(INVITE_KEY,JSON.stringify(invite));localStorage.setItem(FRIENDS_KEY,JSON.stringify(friends));}
+  function makeCode(){return 'PA-'+Math.random().toString(36).slice(2,8).toUpperCase();}
+  function render(){codeEl.textContent=invite.code||'PA-XXXXXX';listEl.innerHTML=friends.length?friends.map(f=>'<div class="challenge-row"><div><b>'+f.replace(/[&<>"']/g,'')+'</b><p>Ami ajouté sur cet appareil</p></div><span>👥</span></div>').join(''):'Ta liste d’amis apparaîtra ici.';}
+  function rewardOnce(){
+    if(invite.rewardClaimed)return false;
+    invite.rewardClaimed=true;
+    const econ=(()=>{try{return JSON.parse(localStorage.getItem('pa_economy_v1')||'{}')}catch(e){return {}}})();
+    econ.energy=Math.min(50,(typeof econ.energy==='number'?econ.energy:25)+25);
+    localStorage.setItem('pa_economy_v1',JSON.stringify(econ));
+    try{if(typeof window.paClubAwardTournament==='function')window.paClubAwardTournament(10);else{let c=JSON.parse(localStorage.getItem('pa_club_v1')||'{}');c.stars=(c.stars||0)+10;localStorage.setItem('pa_club_v1',JSON.stringify(c));}}catch(e){}
+    const energy=document.getElementById('paEnergy');if(energy){energy.textContent=econ.energy;document.getElementById('paEnergyFill').style.width=(econ.energy/50*100)+'%';}
+    save();return true;
+  }
+  document.getElementById('paCreateInvite').onclick=async()=>{
+    if(!invite.code)invite.code=makeCode();
+    const got=rewardOnce();
+    const message='Rejoins-moi sur Penalty Arena ! Mon code invitation : '+invite.code;
+    statusEl.textContent=got?'Invitation créée ! Récompenses obtenues : +25 ⚡ et +10 ⭐. '+message:(invite.rewardClaimed?'Ton bonus d’invitation a déjà été récupéré sur cet appareil. ':'')+message;
+    save();render();
+    try{if(navigator.share)await navigator.share({title:'Penalty Arena',text:message});else if(navigator.clipboard){await navigator.clipboard.writeText(message);statusEl.textContent+=' Message copié pour le partager.';}}catch(e){}
+  };
+  document.getElementById('paCopyInvite').onclick=async()=>{
+    if(!invite.code){statusEl.textContent='Crée d’abord ton invitation pour obtenir un code.';return;}
+    try{await navigator.clipboard.writeText(invite.code);statusEl.textContent='Code '+invite.code+' copié.';}catch(e){statusEl.textContent='Ton code : '+invite.code+' (copie-le manuellement).';}
+  };
+  document.getElementById('paAddFriend').onclick=()=>{
+    const input=document.getElementById('paFriendCodeInput');const code=input.value.trim().toUpperCase();
+    if(!/^PA-[A-Z0-9]{6}$/.test(code)){statusEl.textContent='Code invalide. Le format attendu est PA-XXXXXX.';return;}
+    if(code===invite.code){statusEl.textContent='Tu ne peux pas ajouter ton propre code.';return;}
+    if(friends.includes(code)){statusEl.textContent='Ce code est déjà dans ta liste.';return;}
+    friends.push(code);save();render();statusEl.textContent='Code ajouté à ta liste locale. La vérification entre joueurs sera disponible avec les comptes en ligne.';input.value='';
+  };
+  render();
+})();
+
+</script>
+<script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('Service worker indisponible', err))); }</script>
+</body></html>

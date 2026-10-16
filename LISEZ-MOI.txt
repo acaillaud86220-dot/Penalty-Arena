@@ -1,0 +1,36 @@
+PENALTY ARENA — GUIDE DE DÉMARRAGE ANDROID (EN FRANÇAIS)
+
+Ce pack prépare Penalty Arena pour être installé sur un téléphone Android comme une application web. Il est gratuit à tester. Il ne s’agit pas encore d’un fichier APK et les fonctions qui nécessitent un serveur (vrais comptes, amis entre appareils et tournois en ligne) restent simulées.
+
+OPTION LA PLUS SIMPLE : TESTER SUR TON TÉLÉPHONE
+1. Décompresse le fichier ZIP.
+2. Ouvre le fichier index.html dans un navigateur pour tester le jeu.
+   Remarque : pour installer le jeu comme une application, il faut d’abord le publier sur une adresse sécurisée qui commence par https://.
+
+PUBLIER GRATUITEMENT AVEC GITHUB PAGES
+Tu peux faire ces étapes depuis le téléphone, mais c’est plus facile avec un ordinateur.
+
+1. Ouvre https://github.com/ et crée un compte gratuit si tu n’en as pas.
+2. Crée un nouveau dépôt (bouton « New repository » / « Nouveau dépôt »). Nomme-le : penalty-arena. Choisis « Public » / « Public », puis valide avec « Create repository » / « Créer le dépôt ».
+3. Ajoute les fichiers de ce dossier à la racine du dépôt. Il faut envoyer index.html, manifest.webmanifest, service-worker.js et le dossier assets avec les deux icônes.
+4. Dans le dépôt, ouvre « Settings » (Paramètres). Dans le menu, ouvre « Pages ».
+5. Dans la partie de publication, choisis « Deploy from a branch » (Publier depuis une branche).
+6. Choisis la branche « main » et le dossier « / (root) » (racine), puis appuie sur « Save » (Enregistrer).
+7. Attends que GitHub affiche l’adresse du site. Elle ressemble à : https://TON-PSEUDO.github.io/penalty-arena/
+8. Sur ton Android, ouvre cette adresse dans Chrome. Appuie sur le menu ⋮ en haut, puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ». Le texte exact peut varier selon le téléphone.
+
+SI TU NE VOIS PAS LES MÊMES MENUS
+GitHub peut afficher ses menus en anglais. Les traductions françaises sont indiquées entre parenthèses dans ce guide. Envoie-moi une capture d’écran de la page où tu es bloqué et je te dirai exactement où appuyer.
+
+À SAVOIR
+• L’hébergement du site de test peut être gratuit avec GitHub Pages.
+• L’installation depuis Chrome est gratuite.
+• La publication sur Google Play demande un compte développeur payant. Avec un budget de 0 €, commence par l’installation depuis Chrome.
+• Les boutons Google/Facebook, les amis, les invitations et les tournois en ligne ne sont pas encore reliés à un serveur commun.
+• Les achats affichés dans la boutique sont fictifs : aucun paiement réel n’est activé.
+
+FICHIERS DU PACK
+• index.html : le jeu Penalty Arena.
+• manifest.webmanifest : nom et paramètres de l’application.
+• service-worker.js : aide au fonctionnement hors ligne après la première visite.
+• assets/ : icônes de l’application.
